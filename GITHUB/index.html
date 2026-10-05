@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAO DANG CONG DONG DONG THAP</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+        }
+
+        .toggle-checkbox {
+            display: none;
+        }
+
+        header {
+            background-color: #008040;
+            color: white;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-truong{
+            width: 45px; 
+            height: auto; 
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .logo-text span {
+            font-size: 11px;
+        }
+
+        .login-btn {
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .login-btn:hover {
+            text-decoration: underline;
+        }
+
+        .menu {
+            background-color: white;
+            border-bottom: 2px solid #ccc;
+        }
+
+        .menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0 15px;
+            display: flex;
+        }
+
+        .menu li a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .menu li a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 30px;
+            min-height: 400px;
+        }
+
+        .content-left h2 {
+            color: #003366;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .content-left p {
+            color: #cc6600;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .content-right img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        footer {
+            background-color: #1a3a6c;
+            color: white;
+            padding: 20px;
+            font-size: 11px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+        }
+
+        footer p {
+            margin: 3px 0;
+        }
+
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+
+        .developer {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #login-toggle:checked ~ .modal-overlay {
+            display: flex;
+        }
+
+        .login-form-box {
+            background-color: #eaeaea;
+            border: 1px solid #b5b5b5;
+            padding: 20px 30px;
+            width: 320px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+        }
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .form-row {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-row label {
+            width: 50px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="password"] {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #7f7f7f;
+            background-color: white;
+        }
+
+        .form-checkbox {
+            margin-left: 50px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-submit {
+            text-align: center;
+        }
+
+        .form-submit button {
+            background: linear-gradient(to bottom, #f9f9f9, #d0d0d0);
+            border: 1px solid #7f7f7f;
+            padding: 5px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .form-submit button:hover {
+            background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+        }
+    </style>
+    </head>
+<body>
+    <input type="checkbox" id="login-toggle" class="toggle-checkbox">
+
+    <header>
+        <div class="top-bar">
+            <div class="logo-area">
+                <img src="./IMAGE/logocdcddt.jpg" class="logo-truong">
+                <div class="logo-text">
+                    <h1>CAO ĐẲNG CỘNG ĐỒNG ĐỒNG THÁP</h1>
+                    <span>Dong Thap Community College</span>
+                </div>
+            </div>
+            <label for="login-toggle" class="login-btn">Đăng nhập</label>
+        </div>
+
+        <nav class="menu">
+            <ul>
+                <li><a href="#"><i class="fa-solid fa-house"></i></a></li>
+                <li><a href="#">Tra cứu HSSV</a></li>
+                <li><a href="#">TKB lớp</a></li>
+                <li><a href="#">TKB tuần</a></li>
+                <li><a href="#">Lịch GV</a></li>
+                <li><a href="#">Lịch phòng</a></li>
+                <li><a href="#">Đăng ký xét tuyển</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="content-left">
+            <h2>TRƯỜNG CAO ĐẲNG CỘNG ĐỒNG ĐỒNG THÁP</h2>
+            <p>Dữ liệu được tích hợp từ Hệ thống quản lý đào tạo Digalaxy SIMS.NET</p>
+        </div>
+        <div class="content-right">
+            <img src="./IMAGE/htdt.jpg" alt="Hệ thống quản lý đào tạo">
+        </div>
+    </main>
+    <footer>
+        <div class="footer-content">
+            <p><strong>Bản quyền 2021 © TRƯỜNG CAO ĐẲNG CỘNG ĐỒNG ĐỒNG THÁP</strong></p>
+            <p>Trụ sở chính: 259 Thiên Hộ Dương, phường Hòa Thuận, TP. Cao Lãnh, Đồng Tháp</p>
+            <p>Điện thoại: 0277.3851523 - Fax: 0277.3857932 - Email: <a href="https://dtcc.edu.vn/">dtcc.edu.vn</a></p>
+            <p>Cơ sở 1: Số 2, Trần Phú, Phường 3, Thành phố Sa Đéc, tỉnh Đồng Tháp</p>
+            <p>Điện thoại: 0277.3863618</p>
+            <div class="developer">
+                Phát triển bởi <a href="#">CÔNG TY PHẦN MỀM THIÊN HÀ SỐ</a>
+            </div>
+        </div>
+    </footer>
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-form-box">
+            <label for="login-toggle" class="close-btn">&times;</label>
+            
+            <div class="form-row">
+                <label>User:</label>
+                <input type="text">
+            </div>
+            <div class="form-row">
+                <label>Pass:</label>
+                <input type="password">
+            </div>
+            <div class="form-checkbox">
+                <input type="checkbox" id="remember">
+                <label for="remember">Nhớ thông tin đăng nhập</label>
+            </div>
+            <div class="form-submit">
+                <button type="button">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
