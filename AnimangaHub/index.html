@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AniManga Hub - Nền Tảng Đọc Truyện & Xem Phim Đỉnh Cao</title>
+    <link rel="stylesheet" href="./CSS/css.css">
+
+</head>
+<body data-theme="dark">
+
+    <!-- HEADER ĐIỀU HƯỚNG -->
+    <header>
+        <div class="logo" onclick="switchView('home')">
+            AniManga Hub
+        </div>
+        <nav>
+            <ul>
+                <li><button id="nav-home" class="active" onclick="switchView('home')">Trang Chủ</button></li>
+                <li><button id="nav-manga" onclick="switchView('manga-list')">Truyện Tranh</button></li>
+                <li><button id="nav-anime" onclick="switchView('anime-list')">Phim Anime</button></li>
+                <li><button id="nav-favorites" onclick="switchView('favorites')">Thư viện</button></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <button class="search-btn" onclick="alert('Tính năng tìm kiếm nhanh đã sẵn sàng!')">🔍 Tìm kiếm</button>
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">☀️ Sáng/Tối</button>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH (CONTAINER) -->
+    <div class="container">
+
+        <!-- 1. VIEW TRANG CHỦ -->
+        <div id="view-home" class="view-section active">
+            <div class="hero-banner">
+                <h1>Thế Giới Manga & Anime Đỉnh Cao</h1>
+                <p>Thưởng thức hàng ngàn bộ truyện tranh bản đẹp và các thước phim anime full HD mới nhất mỗi ngày hoàn toàn miễn phí.</p>
+                <button class="hero-btn" onclick="switchView('manga-list')">Khám Phá Ngay</button>
+            </div>
+
+            <h2 class="section-title">🔥 Truyện Tranh Đề Cử</h2>
+            <div id="home-manga-grid" class="media-grid"></div>
+
+            <h2 class="section-title">🎬 Anime Hot Mùa Này</h2>
+            <div id="home-anime-grid" class="media-grid"></div>
+        </div>
+
+        <!-- 2. VIEW DANH SÁCH TRUYỆN TRANH -->
+        <div id="view-manga-list" class="view-section">
+            <h2 class="section-title">📚 Kho Tàng Truyện Tranh</h2>
+            <div id="full-manga-grid" class="media-grid"></div>
+        </div>
+
+        <!-- 3. VIEW DANH SÁCH ANIME -->
+        <div id="view-anime-list" class="view-section">
+            <h2 class="section-title">🍿 Kho Phim Anime Tổng Hợp</h2>
+            <div id="full-anime-grid" class="media-grid"></div>
+        </div>
+
+        <!-- 4. VIEW TỦ SÁCH YÊU THÍCH (LOCALSTORAGE) -->
+        <div id="view-favorites" class="view-section">
+            <h2 class="section-title">⭐ Tủ Sách / Phim Đã Lưu Của Bạn</h2>
+            <div id="favorites-grid" class="media-grid"></div>
+            <p id="empty-fav-msg" style="color: var(--text-muted); display: none;">Chưa có mục nào được thêm vào tủ sách yêu thích.</p>
+        </div>
+
+        <!-- 5. VIEW CHI TIẾT TÁC PHẨM -->
+        <div id="view-detail" class="view-section">
+            <div class="detail-header">
+                <img id="detail-thumb" class="detail-img" src="" alt="Thumbnail">
+                <div class="detail-meta">
+                    <h2 id="detail-title">Tên Tác Phẩm</h2>
+                    <p><strong>Thể loại:</strong> <span id="detail-genres">Hành động, Giả tưởng, Shonen</span></p>
+                    <p><strong>Trạng thái:</strong> <span id="detail-status">Đang phát hành</span></p>
+                    <p id="detail-desc">Mô tả chi tiết nội dung tác phẩm...</p>
+                    <button id="btn-read-watch" class="btn-action" onclick="startReadingOrWatching()">Đọc Chương 1</button>
+                    <button id="btn-fav" class="btn-action" style="background:#334155; color:#fff;" onclick="toggleFavoriteCurrent()">❤️ Thêm vào Tủ Sách</button>
+                </div>
+            </div>
+
+            <!-- Khung bình luận tương tác -->
+            <div class="comment-section">
+                <h3>💬 Đánh giá & Bình luận</h3>
+                <div class="comment-input-box" style="margin-top: 15px;">
+                    <textarea id="commentInput" placeholder="Viết bình luận của bạn..."></textarea>
+                    <button class="btn-action" onclick="submitComment()">Gửi Bình Luận</button>
+                </div>
+                <div id="commentList" class="comment-list">
+                    <!-- Danh sách bình luận demo -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. VIEW ĐỌC TRUYỆN (MANGA READER) -->
+        <div id="view-reader" class="view-section">
+            <div class="reader-container">
+                <div class="reader-toolbar">
+                    <button class="theme-toggle-btn" onclick="switchView('detail')">⬅ Trở Lại Thông Tin</button>
+                    <h3 id="reader-title-bar">Đang đọc: Chương 1</h3>
+                    <div>
+                        <button class="theme-toggle-btn" onclick="changeZoom(-0.1)">🔍-</button>
+                        <button class="theme-toggle-btn" onclick="changeZoom(0.1)">🔍+</button>
+                    </div>
+                </div>
+                <div id="manga-pages-box">
+                    <!-- Ảnh trang truyện render động -->
+                </div>
+                <div class="controls" style="margin-top: 20px;">
+                    <button class="btn-action" onclick="prevChapter()">⏮ Chương Trước</button>
+                    <button class="btn-action" onclick="nextChapter()">Chương Sau ⏭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. VIEW XEM PHIM (ANIME PLAYER) -->
+        <div id="view-watch" class="view-section">
+            <div class="watch-container">
+                <div class="reader-toolbar">
+                    <button class="theme-toggle-btn" onclick="switchView('detail')">⬅ Trở Lại Thông Tin</button>
+                    <h3 id="watch-title-bar">Đang xem: Tập 1</h3>
+                    <button class="theme-toggle-btn" onclick="alert('Đã bật chế độ Rạp Phim (Tắt đèn xung quanh)!')">🎬 Rạp Phim</button>
+                </div>
+                <div class="video-box">
+                    <iframe id="animeIframe" src="" allowfullscreen></iframe>
+                </div>
+                <p><strong>Chọn tập phim:</strong></p>
+                <div id="episodeList" class="episode-list">
+                    <!-- Nút chọn tập -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 AniManga Hub Platform. Xây dựng theo chuẩn kiến trúc HTML5, CSS3 & JavaScript DOM.</p>
+    </footer>
+
+    <!-- CHƯƠNG 4: MÃ JAVASCRIPT XỬ LÝ TƯƠNG TÁC NÂNG CAO -->
+    <script>
+        // --- 1. MOCK DATA (Cơ sở dữ liệu mẫu phong phú) ---
+        const database = [
+            {
+                id: 1,
+                type: 'manga',
+                title: 'Arya Thỉnh thoảng trêu tôi bằng tiếng Nga',
+                subtitle: 'Chương 250: Trận chiến quyết định',
+                thumb: 'https://via.placeholder.com/200x260/1e293b/f59e0b?text=Jujutsu+Kaisen',
+                genres: 'Hành động, Siêu nhiên, Shonen',
+                status: 'Đang tiến hành',
+                desc: 'Yuuji Itadori nuốt phải một ngón tay của Nguyền Vương Sukuna và bị cuốn vào cuộc chiến khốc liệt giữa các chú thuật sư.',
+                chapters: [
+                    { num: 1, pages: ['https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216061/Screenshot_2026-10-17_124204.webp', 
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216962/Screenshot_2026-10-17_125747.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216962/Screenshot_2026-10-17_125825.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216965/Screenshot_2026-10-17_125842.png',    
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216963/Screenshot_2026-10-17_125851.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216963/Screenshot_2026-10-17_125857.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216966/Screenshot_2026-10-17_125904.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/f_auto,q_auto,w_300/v1792216963/Screenshot_2026-10-17_125911.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220225/Screenshot_2026-10-17_133200.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220225/Screenshot_2026-10-17_133207.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220225/Screenshot_2026-10-17_133214.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220226/Screenshot_2026-10-17_133222.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220225/Screenshot_2026-10-17_133231.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220228/Screenshot_2026-10-17_133237.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220226/Screenshot_2026-10-17_133242.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220226/Screenshot_2026-10-17_133247.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220226/Screenshot_2026-10-17_133254.png',
+                    'https://res.cloudinary.com/fmyo1vjy/image/upload/v1792220226/Screenshot_2026-10-17_133259.png',] },
+                    { num: 2, pages: ['https://via.placeholder.com/700x1000/334155/ffffff?text=JJK+Chap+2+Trang+1', 
+                    'https://via.placeholder.com/700x1000/475569/ffffff?text=JJK+Chap+2+Trang+2'] }
+                ]
+            },
+            {
+                id: 2,
+                type: 'manga',
+                title: 'One Piece - Đảo Hải Tặc',
+                subtitle: 'Chương 1110: Ngũ Lão Tinh xuất hiện',
+                thumb: 'https://via.placeholder.com/200x260/1e293b/3b82f6?text=One+Piece',
+                genres: 'Phiêu lưu, Hành động, Hài hước',
+                status: 'Đang tiến hành',
+                desc: 'Hành trình vĩ đại của Monkey D. Luffy cùng băng hải tặc Mũ Rơm trên con đường chinh phục kho báu One Piece.',
+                chapters: [
+                    { num: 1, pages: ['https://via.placeholder.com/700x1000/1e293b/ffffff?text=OP+Chap+1+Trang+1', 'https://via.placeholder.com/700x1000/334155/ffffff?text=OP+Chap+1+Trang+2'] }
+                ]
+            },
+            {
+                id: 3,
+                type: 'anime',
+                title: 'Demon Slayer: Kimetsu no Yaiba',
+                subtitle: 'Phần 4: Đại trụ đặc huấn - Tập 8',
+                thumb: 'https://via.placeholder.com/200x260/1e293b/ef4444?text=Demon+Slayer',
+                genres: 'Hành động, Lịch sử, Giả tưởng',
+                status: 'Hoàn thành',
+                desc: 'Tanjiro gia nhập Sát Quỷ Đội để tìm cách cứu em gái Nezuko hóa quỷ và trả thù cho gia đình.',
+                episodes: [
+                    { ep: 1, url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+                    { ep: 2, url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+                    { ep: 3, url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+                ]
+            },
+            {
+                id: 4,
+                type: 'anime',
+                title: 'Solo Leveling - Tôi Thăng Cấp Một Mình',
+                subtitle: 'Tập 12 (End SS1)',
+                thumb: 'https://via.placeholder.com/200x260/1e293b/10b981?text=Solo+Leveling',
+                genres: 'Hành động, Phiêu lưu, Đen tối',
+                status: 'Đang phát sóng',
+                desc: 'Sung Jin-woo, thợ săn yếu nhất cấp E, vô tình nhận được một hệ thống huấn luyện đặc biệt giúp cậu mạnh lên không giới hạn.',
+                episodes: [
+                    { ep: 1, url: 'https://www.youtube.com/embed/FSN6IRJMAEw' },
+                    { ep: 2, url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' }
+                ]
+            }
+        ];
+
+        // --- 2. QUẢN LÝ TRẠNG THÁI & LOCALSTORAGE ---
+        let currentItem = null;
+        let currentChapterIndex = 0;
+        let currentZoom = 1;
+        let favorites = JSON.parse(localStorage.getItem('animanga_favs')) || [];
+        let commentsDB = JSON.parse(localStorage.getItem('animanga_comments')) || {
+            1: [{user: 'OtakuVN', text: 'Truyện cuốn quá mọi người ơi!'}, {user: 'Minh Tuấn', art: 'Art đỉnh chóp.'}]
+        };
+
+        // Khởi tạo trang khi tải xong
+        window.onload = function() {
+            renderGrids();
+            updateFavoritesUI();
+        };
+        // --- 3. ĐIỀU HƯỚNG VIEW (DOM Manipulation) ---
+        function switchView(viewId) {
+        let sections = document.querySelectorAll('.view-section');
+        sections.forEach(sec => sec.classList.remove('active'));
+
+        document.getElementById('view-' + viewId).classList.add('active');
+
+        // 👇 THÊM ĐOẠN NÀY: Nếu chuyển sang view khác không phải 'watch' thì tắt video
+        if (viewId !== 'watch') {
+            let iframe = document.getElementById('animeIframe');
+            if (iframe) {
+                iframe.src = ""; // Xóa src của iframe để dừng hẳn video và âm thanh
+            }
+        }
+
+    // Cập nhật trạng thái active trên nav button
+    let navBtns = document.querySelectorAll('nav button');
+    navBtns.forEach(btn => btn.classList.remove('active'));
+    if(document.getElementById('nav-' + viewId)) {
+        document.getElementById('nav-' + viewId).classList.add('active');
+    }
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+        // --- 4. RENDER DỮ LIỆU LÊN GIAO DIỆN ---
+        function renderGrids() {
+            let homeMangaHTML = '', homeAnimeHTML = '';
+            let fullMangaHTML = '', fullAnimeHTML = '';
+
+            database.forEach(item => {
+                let cardHTML = `
+                    <div class="media-card" onclick="openDetail(${item.id})">
+                        <img class="media-thumb" src="${item.thumb}" alt="${item.title}">
+                        <div class="media-info">
+                            <div class="media-title">${item.title}</div>
+                            <div class="media-subtitle">${item.subtitle}</div>
+                        </div>
+                    </div>
+                `;
+
+                if(item.type === 'manga') {
+                    homeMangaHTML += cardHTML;
+                    fullMangaHTML += cardHTML;
+                } else {
+                    homeAnimeHTML += cardHTML;
+                    fullAnimeHTML += cardHTML;
+                }
+            });
+
+            document.getElementById('home-manga-grid').innerHTML = homeMangaHTML;
+            document.getElementById('home-anime-grid').innerHTML = homeAnimeHTML;
+            document.getElementById('full-manga-grid').innerHTML = fullMangaHTML;
+            document.getElementById('full-anime-grid').innerHTML = fullAnimeHTML;
+        }
+
+        // --- 5. CHI TIẾT SẢN PHẨM ---
+        function openDetail(id) {
+            currentItem = database.find(i => i.id === id);
+            if(!currentItem) return;
+
+            document.getElementById('detail-thumb').src = currentItem.thumb;
+            document.getElementById('detail-title').innerText = currentItem.title;
+            document.getElementById('detail-genres').innerText = currentItem.genres;
+            document.getElementById('detail-status').innerText = currentItem.status;
+            document.getElementById('detail-desc').innerText = currentItem.desc;
+
+            let btnReadWatch = document.getElementById('btn-read-watch');
+            if(currentItem.type === 'manga') {
+                btnReadWatch.innerText = "📖 Đọc Chương 1";
+            } else {
+                btnReadWatch.innerText = "▶ Xem Tập 1";
+            }
+
+            updateFavButtonUI();
+            renderComments();
+            switchView('detail');
+        }
+
+        // --- 6. HỆ THỐNG ĐỌC TRUYỆN & XEM PHIM ---
+        function startReadingOrWatching() {
+            if(currentItem.type === 'manga') {
+                currentChapterIndex = 0;
+                renderMangaReader();
+                switchView('reader');
+            } else {
+                playEpisode(0);
+                renderEpisodeList();
+                switchView('watch');
+            }
+        }
+
+        function renderMangaReader() {
+            let chap = currentItem.chapters[currentChapterIndex];
+            document.getElementById('reader-title-bar').innerText = `Đang đọc: Chương ${chap.num}`;
+            
+            
+            let pagesHTML = '';
+
+            chap.pages.forEach((p, index) => {
+                pagesHTML += `
+                    <img
+                        class="manga-page-img"
+                        src="${p}"
+                        alt="Trang truyện ${index + 1}"
+                        loading="lazy"
+                        decoding="async"
+                        style="
+                            width: 100%;
+                            height: auto;
+                            display: block;
+                            transform: scale(${currentZoom});
+                            margin-bottom: 10px;
+                        "
+                    >
+                `;
+            });
+
+            document.getElementById('manga-pages-box').innerHTML = pagesHTML;
+
+        }
+
+        function changeZoom(val) {
+            currentZoom += val;
+            if(currentZoom < 0.5) currentZoom = 0.5;
+            if(currentZoom > 1.5) currentZoom = 1.5;
+            renderMangaReader();
+        }
+
+        function nextChapter() {
+            if(currentChapterIndex < currentItem.chapters.length - 1) {
+                currentChapterIndex++;
+                renderMangaReader();
+            } else {
+                alert("Đây là chương mới nhất hiện tại!");
+            }
+        }
+
+        function prevChapter() {
+            if(currentChapterIndex > 0) {
+                currentChapterIndex--;
+                renderMangaReader();
+            } else {
+            alert("Đây là chương đầu tiên!");
+            }
+        }
+
+        function renderEpisodeList() {
+            let listHTML = '';
+            currentItem.episodes.forEach((ep, idx) => {
+                listHTML += `<button class="ep-btn" id="ep-btn-${idx}" onclick="playEpisode(${idx})">Tập ${ep.ep}</button>`;
+            });
+            document.getElementById('episodeList').innerHTML = listHTML;
+        }
+
+        function playEpisode(idx) {
+            let ep = currentItem.episodes[idx];
+            document.getElementById('animeIframe').src = ep.url;
+            document.getElementById('watch-title-bar').innerText = `Đang xem: Tập ${ep.ep}`;
+            
+            // Highlight nút active
+            let btns = document.querySelectorAll('.ep-btn');
+            btns.forEach((b, i) => {
+                if(i === idx) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+        }
+
+        // --- 7. TỦ SÁCH YÊU THÍCH & LOCALSTORAGE ---
+        function toggleFavoriteCurrent() {
+            if(!currentItem) return;
+            let index = favorites.findIndex(i => i.id === currentItem.id);
+            if(index > -1) {
+                favorites.splice(index, 1);
+                alert("Đã xóa khỏi Tủ sách yêu thích!");
+            } else {
+                favorites.push(currentItem);
+                alert("Đã thêm vào Tủ sách yêu thích thành công!");
+            }
+            localStorage.setItem('animanga_favs', JSON.stringify(favorites));
+            updateFavButtonUI();
+            updateFavoritesUI();
+        }
+
+        function updateFavButtonUI() {
+            let btnFav = document.getElementById('btn-fav');
+            let isFav = favorites.some(i => i.id === currentItem.id);
+            if(isFav) {
+                btnFav.innerText = "❤️ Đã Trong Tủ Sách";
+                btnFav.style.background = "#ef4444";
+            } else {
+                btnFav.innerText = "🤍 Thêm vào Tủ Sách";
+                btnFav.style.background = "#334155";
+            }
+        }
+
+        function updateFavoritesUI() {
+            let grid = document.getElementById('favorites-grid');
+            let emptyMsg = document.getElementById('empty-fav-msg');
+            
+            if(favorites.length === 0) {
+                grid.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            let html = '';
+            favorites.forEach(item => {
+                html += `
+                    <div class="media-card" onclick="openDetail(${item.id})">
+                        <img class="media-thumb" src="${item.thumb}" alt="${item.title}">
+                        <div class="media-info">
+                            <div class="media-title">${item.title}</div>
+                            <div class="media-subtitle">Đã lưu trong tủ</div>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // --- 8. HỆ THỐNG BÌNH LUẬN (DOM & LocalStorage) ---
+        function submitComment() {
+            let text = document.getElementById('commentInput').value.trim();
+            if(!text) {
+                alert("Vui lòng nhập nội dung bình luận!");
+                return;
+            }
+
+            if(!commentsDB[currentItem.id]) {
+                commentsDB[currentItem.id] = [];
+            }
+
+            commentsDB[currentItem.id].unshift({user: 'Thành viên AniManga', text: text});
+            localStorage.setItem('animanga_comments', JSON.stringify(commentsDB));
+            
+            document.getElementById('commentInput').value = '';
+            renderComments();
+        }
+
+        function renderComments() {
+            let list = document.getElementById('commentList');
+            let itemComments = commentsDB[currentItem.id] || [];
+            
+            if(itemComments.length === 0) {
+                list.innerHTML = '<p style="color:var(--text-muted)">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>';
+                return;
+            }
+
+            let html = '';
+            itemComments.forEach(c => {
+                html += `
+                    <div class="comment-item">
+                        <div class="comment-user">${c.user}</div>
+                        <div>${c.text}</div>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        // --- 9. TÍNH NĂNG ĐỔI GIAO DIỆN SÁNG / TỐI (LIGHT / DARK MODE) ---
+        function toggleTheme() {
+            let body = document.body;
+            let currentTheme = body.getAttribute('data-theme');
+            let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            
+            let btn = document.getElementById('themeToggleBtn');
+            btn.innerText = newTheme === 'dark' ? '☀️ Sáng/Tối' : '🌙 Chế độ Tối';
+        }
+    </script>
+</body>
+</html>
